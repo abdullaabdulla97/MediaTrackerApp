@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+    db:
+        image: postgres:15-alpine
+        container_name: media-tracker-db
+        environment:
+            POSTGRES_DB: media_tracker
+            POSTGRES_USER: abdulla97
+            POSTGRES_PASSWORD: "1997"
+        volumes:
+            - db_data:/var/lib/postgresql/db_data
+        networks:
+            - media-net
+
+    backend:
+        build:
+            context: ./Backend
+            dockerfile: Dockerfile
+        container_name: media-tracker-backend
+        depends_on:
+            - db
+        environment:
+            DB_HOST: db
+            DB_NAME: media_tracker
+            DB_USER: abdulla97
+            DB_PASS: "1997"
+            PORT: 8080
+        ports:
+            - "8080:8080"
+        networks:
+            - media-net
+    frontend:
+        build:
+            context: ./Frontend
+            dockerfile: Dockerfile
+        container_name: media-tracker-frontend
+        depends_on:
+            - backend
+        ports:
+            - "3000:80"
+        networks:
+            - media-net
+
+networks:
+    media-net:
+
+volumes:
+    db_data:
+    
