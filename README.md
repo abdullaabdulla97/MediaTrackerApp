@@ -33,12 +33,13 @@ Users can **sign up / log in**, search for movies & shows (via TMDB API), and or
 ### Backend
 - **Spring Boot:** (Java, REST API)  
 - **PostgreSQL:** (persistent storage)  
-- **Spring Data JPA:** (database interactions)  
+- **Spring Data JPA:** (database interactions)
 
-### Deployment
-- **Frontend:** Vercel  
-- **Backend:** Render
-
+### DevOps & Containerization
+- **Docker:** Containerized frontend and backend services
+- **Docker Compose:** Local multi-container orchestration (Frontend + Backend + PostgreSQL)
+- **Kubernetes (Local):** Deployed using Docker Desktop Kubernetes
+  - Deployments, Services, ConfigMaps, Secrets, Ingress
 ---
 
 ## 📸 Screenshots
@@ -89,6 +90,41 @@ echo "REACT_APP_API_BASE=http://localhost:8080" > .env
 
 # 4. Start the development server
 npm start
+```
+---
+
+## Docker Setup (Local)
+This project is fully containerized using **Docker** for consistent local development.
+
+### Run with Docker Compose
+```bash
+# From project root
+docker compose up --build
+
+# Access it at:
+Frontend: http://localhost:3000
+Backend: http://localhost:8080
+```
+
+---
+
+## Kubernetes Deployment (Local)
+This project includes **Kubernetes manifests** for running the application on a local Kubernetes cluster.
+
+### Environment
+- **Kubernetes:** Docker Desktop (local cluster)
+- **Images:** Built locally and used by the cluster
+- **Networking:** Ingress-based routing
+
+### Deploy to Kubernetes
+```bash
+# Enable Kubernetes in Docker Desktop first
+kubectl apply -f k8s/
+
+# Verify Deployment
+kubectl get pods
+kubectl get services
+kubectl get ingress
 ```
 ---
 
