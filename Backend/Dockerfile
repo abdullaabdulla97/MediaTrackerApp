@@ -1,26 +1,28 @@
 ### Build
-FROM maven:3.9-eclipse-temurin-21 AS build
+
+FROM maven:3.9-eclipse-temurin-17-alpine AS build
+
+# Set working directory inside the container
 WORKDIR /app
 
-# Download dependencies first
+# Copy Maven files
 COPY pom.xml .
-RUN mvn -q -B -DskipTests dependency:go-offline
-
-# Copy source and build
 COPY src ./src
-RUN mvn -q -B -DskipTests clean package
+
+# Build the Spring Boot application
+RUN mvn -q -DskipTests package
 
 ### Run
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:17-jre-alpine
+
 WORKDIR /app
 
-# Render provides PORT; we pass it to Spring via -Dserver.port
-ENV PORT=8080
-EXPOSE 8080
-
-# Copy the jar built in the build stage
+# Copy the built JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Using the PORT Render gives us
-CMD ["sh", "-c", "java -Dserver.port=${PORT} -jar app.jar"]
+# Expose backend port
+EXPOSE 8080
+
+# Run the app
+ENTRYPOINT ["java", "-jar", "app.jar"] 
